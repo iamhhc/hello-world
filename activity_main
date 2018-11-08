@@ -1,0 +1,129 @@
+<!--11.7修改试图在同一界面进行切换。 -->
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="0dp"
+    android:layout_weight="8">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme= "@style/translucent"/>
+            <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+            <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_main_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_background1"/>
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu" />
+</android.support.v4.widget.DrawerLayout>
+
+
+    <!--                         分割线                     -->
+
+    <TabHost
+    android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#FFFFFFFF"
+            android:orientation="vertical" >
+
+
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" >
+                <FrameLayout
+                    android:id="@+id/frameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <RadioGroup
+                    android:id="@+id/radiogroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/main_background1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <!-- android:background="@drawable/bk_footer" radiogroup放在framelayout里的版本 -->
+
+                    <RadioButton
+                        android:id="@+id/radio_search"
+                        style="@style/main_tab_bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_background3"
+                        android:drawableTop="@drawable/learning_icon1"
+                        android:text="搜索"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_main"
+                        style="@style/main_tab_bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_background3"
+                        android:button="@null"
+                        android:checked="true"
+                        android:drawableTop="@drawable/learning_icon1"
+                        android:text="首 页"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_mycenter"
+                        style="@style/main_tab_bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_background3"
+                        android:drawableTop="@drawable/learning_icon1"
+                        android:text="个人中心"/>
+                </RadioGroup>
+            </FrameLayout>
+            </FrameLayout>
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.0"
+                android:visibility="gone" />
+
+            　　　　 <!-- 我只是一条线 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="@drawable/main_background1" >
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </TabHost>
+
+</LinearLayout>
