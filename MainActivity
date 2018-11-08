@@ -1,0 +1,331 @@
+package com.example.doublez;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.litepal.crud.DataSupport;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+
+public class MainActivity extends AppCompatActivity
+{
+    private List<MainContent> maincontentList = new ArrayList<>();
+    private int t1 = 100;
+    private int t2 = 100;
+    private int backpressed = 0;
+    private TabHost tabHost;
+    private RadioGroup radiogroup;
+    private int menuid;
+
+    private User user = null;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        /*user = (User)getIntent().getSerializableExtra("User");
+
+        //Toolbar
+        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //DrawerLayout 点击按钮打开菜单
+        /**
+         * 为什么不使用书上方法？
+         * */
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        //NavigationView
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+
+        //设置head部分显示内容
+        View headerLayout = navView.inflateHeaderView(R.layout.nav_header);
+        TextView nav_username = (TextView) headerLayout.findViewById(R.id.username);
+        TextView nav_email = (TextView) headerLayout.findViewById(R.id.mail);
+        ImageView nav_avatar = (ImageView) headerLayout.findViewById(R.mipmap.doublez);
+
+        //nav_email.setText(user.getEmail());
+        //nav_username.setText(user.getUsername());
+        nav_email.setText("hhc@bupt.edu.cn");
+        nav_username.setText("hhc");
+       // Bitmap bitmap = BitmapFactory.decodeByteArray(user.getavatarBMP(), 0, user.getavatarBMP().length);
+        //nav_avatar.setImageBitmap(bitmap);
+        Log.d("MainActivity", "执行到4处");
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item)
+            {
+                switch(item.getItemId())
+                {
+
+                    case R.id.nav_1:
+                        Toast.makeText(MainActivity.this,"排行榜", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_2:
+                        //Toast.makeText(MainActivity.this,"最近配音", Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent(MainActivity.this, Recent.class);
+                        startActivity(intent2);
+                        break;
+                    case R.id.nav_3:
+                        Intent intent = new Intent(MainActivity.this, Login.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                }
+                //重复了，注释掉？ 注释时把drawer设置成一个属性，在Oncreate方法里赋值就不会报错了
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_main_activity);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));  // 分割线
+
+        initMainContent();
+        MainContentAdapter adapter = new MainContentAdapter(maincontentList, MainActivity.this);
+        recyclerView.setAdapter(adapter);
+
+*/
+
+        //View view=this.getLayoutInflater().inflate((R.layout.activity_main), null);
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
+        //tabHost.setup(this.getLocalActivityManager());
+
+        TabHost.TabSpec spec;
+        final Intent intent1,intent2,intent3;
+        intent1=new Intent().setClass(this,Content.class);
+        //spec=tabHost.newTabSpec("main").setIndicator("main").setContent(intent);
+        tabHost.addTab(tabHost.newTabSpec("main").setIndicator("main").setContent(R.id.frameLayout));
+
+        //intent2=new Intent().setClass(this,FragmentCenter.class);
+        //spec=tabHost.newTabSpec("mycenter").setIndicator("mycenter").setContent(intent);
+        tabHost.addTab(tabHost.newTabSpec("mycenter").setIndicator("mycenter").setContent(R.id.frameLayout));
+
+        //intent3=new Intent().setClass(this, Learnfragment.class);
+        //spec=tabHost.newTabSpec("search").setIndicator("search").setContent(intent);
+        tabHost.addTab(tabHost.newTabSpec("search").setIndicator("search").setContent(R.id.frameLayout));
+
+
+        tabHost.setCurrentTab(1);
+
+        /*tabHost.setup();
+        final Intent intent1=new Intent(this,Learnfragment.class);
+        tabHost.addTab(tabHost.newTabSpec("main").setIndicator("main")
+                .setContent(R.id.fragment_main));
+        tabHost.addTab(tabHost.newTabSpec("mycenter").setIndicator("mycenter")
+                .setContent(R.id.fragment_mycenter));
+        tabHost.addTab(tabHost.newTabSpec("search").setIndicator("search")
+                .setContent(R.id.fragment_search));
+                */
+
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabid) {
+
+                switch (tabHost.getCurrentTabTag()) {
+                    case "main":
+                        startActivity(intent1);
+                        //previewBook(0);
+                        //tabHost.setCurrentTabByTag("main");
+                        //如果需要动画效果就使用
+                        //setCurrentTabWithAnim(currentTab, 0, "main");
+                        getSupportActionBar().setTitle("首页");
+                        break;
+                    case "mycenter":
+                        previewBook(1);
+                        //tabHost.setCurrentTabByTag("mycenter");
+                        //setCurrentTabWithAnim(currentTab, 1, "mycenter");
+                        getSupportActionBar().setTitle("个人中心");
+
+                        break;
+                    case "search":
+                        previewBook(2);
+                        //tabHost.setCurrentTabByTag("search");
+                        //setCurrentTabWithAnim(currentTab, 2, "search");
+                        //startActivity(intent1);
+                        getSupportActionBar().setTitle("搜索");
+                }
+                // 刷新actionbar的menu
+                getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+
+            }
+        });
+
+
+
+    }
+    //设置右上角的几个页面选项图标
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.toolbar_main,menu);//调用自己写的toolbar
+        switch (menuid) {
+            case R.id.radio_main:
+               // getMenuInflater().inflate(R.menu.main, menu);
+                break;
+            case R.id.radio_mycenter:
+                menu.clear();
+                break;
+            case R.id.radio_search:
+                menu.clear();
+                break;
+        }
+        return true;
+    }
+    //点击选项图标弹出新的对应的窗口
+    //下一步建立新的class分别对应配音、搜索、学习界面，并且每个界面的顶部都是下相同的
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        //if (id == R.id.action_settings) {//什么意思？？？actionsetting在哪，我先注释看看
+        //    return true;
+        //}
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initMainContent()
+    {
+        MainContent a=new MainContent(1, "La Politique", R.drawable.la_politique);
+        maincontentList.add(a);
+
+        MainContent b=new MainContent(2,"La Gloire de mon Père 1",R.drawable.la_gloire_de_mon_pere);
+        maincontentList.add(b);
+
+        MainContent c=new MainContent(3,"La Gloire de mon Père 2",R.drawable.la_gloire_de_mon_pere);
+        maincontentList.add(c);
+
+        MainContent d=new MainContent(4,"Le Château de ma Mère",R.drawable.le_chateau_de_ma_mere);
+        maincontentList.add(d);
+
+        MainContent e=new MainContent(5,"Le Petit Nicolas",R.drawable.le_petit_nicolas);
+        maincontentList.add(e);
+
+        MainContent f=new MainContent(6,"La belle et la Bête",R.drawable.la_belle_et_la_bete);
+        maincontentList.add(f);
+
+        MainContent g=new MainContent(7,"Fanfan",R.drawable.fanfan);
+        maincontentList.add(g);
+    }
+
+    @Override
+    /**
+     * 作用不知
+     * */
+    public void onStart()
+    {
+        super.onStart();
+        backpressed=0;
+    }
+
+    //控制向左向右滑动时效果
+    //需要自己在anim.push_文件里增添动画效果
+    private void setCurrentTabWithAnim(int now, int next, String tag) {
+        if (now > next) {
+            tabHost.getCurrentView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_out));
+            tabHost.setCurrentTabByTag(tag);
+            tabHost.getCurrentView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_in));
+        } else {
+            tabHost.getCurrentView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_out));
+            tabHost.setCurrentTabByTag(tag);
+            tabHost.getCurrentView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_in));
+        }
+    }
+
+    public void previewBook(int group){
+        FragmentManager manager=getSupportFragmentManager();
+        FragmentTransaction transaction=manager.beginTransaction();
+        MainFragment mainFragment=new MainFragment();
+        Bundle bundle= new Bundle();
+        bundle.putInt("group",group);
+        mainFragment.setArguments(bundle);
+        //Fragment fragment = manager.findFragmentById(R.id.frameLayout);
+        transaction.commit();
+    }
+
+
+    @Override
+    /**
+     * 作用不知
+     * */
+    public void onBackPressed()
+    {
+        if(backpressed==0)
+        {
+            Toast.makeText(MainActivity.this,"再按一次退出Doublez!", Toast.LENGTH_SHORT).show();
+            backpressed=1;
+            Date date1=new Date();
+            SimpleDateFormat df1 = new SimpleDateFormat("ss");
+            t1=Integer.parseInt(df1.format(date1));
+        }
+        else
+        {
+            Date date2=new Date();
+            SimpleDateFormat df2 = new SimpleDateFormat("ss");
+            t2=Integer.parseInt(df2.format(date2));
+            if(((t2-t1)<=3)||((t2-t1+60)<=3))
+            {
+                finish();
+            }
+            else
+            {
+                t1=100;
+                t2=100;
+                Toast.makeText(MainActivity.this,"再按一次退出Doublez!", Toast.LENGTH_SHORT).show();
+                backpressed=1;
+                Date date1=new Date();
+                SimpleDateFormat df1 = new SimpleDateFormat("ss");
+                t1=Integer.parseInt(df1.format(date1));
+            }
+        }
+    }
+
+}
